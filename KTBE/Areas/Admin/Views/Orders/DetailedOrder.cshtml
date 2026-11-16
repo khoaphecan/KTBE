@@ -1,0 +1,59 @@
+﻿@model KTBE.Models.Order
+
+@{
+    ViewBag.Title = "Chi tiết đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 style="font-size: 32px; font-weight: normal; margin: 15px 0 25px 0;">CHI TIẾT ĐƠN HÀNG</h1>
+
+<div class="row">
+    <!-- Cột trái: THÔNG TIN ĐƠN HÀNG -->
+    <div class="col-md-5">
+        <h4 style="font-weight: normal; margin-bottom: 20px;">THÔNG TIN ĐƠN HÀNG</h4>
+        <table class="table table-borderless" style="line-height: 2;">
+            <tbody>
+                <tr>
+                    <td style="width: 45%; text-align: right; font-weight: bold; padding: 4px 15px 4px 0;">Ngày đặt hàng</td>
+                    <td style="text-align: left; padding: 4px 0;">@Model.OrderDate.ToString("M/d/yyyy h:mm:ss tt")</td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; font-weight: bold; padding: 4px 15px 4px 0;">Tên khách hàng</td>
+                    <td style="text-align: left; padding: 4px 0;">@(Model.Customer != null ? Model.Customer.CustomerName : "N/A")</td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; font-weight: bold; padding: 4px 15px 4px 0;">Tổng giá trị</td>
+                    <td style="text-align: left; padding: 4px 0;">@Model.TotalAmount.ToString("N2")</td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; font-weight: bold; padding: 4px 15px 4px 0;">Phương thức thanh toán</td>
+                    <td style="text-align: left; padding: 4px 0;">@(string.IsNullOrEmpty(Model.PaymentMethod) ? "" : Model.PaymentMethod)</td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; font-weight: bold; padding: 4px 15px 4px 0;">Trạng thái thanh toán</td>
+                    <td style="text-align: left; padding: 4px 0;">@Model.PaymentStatus</td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; font-weight: bold; padding: 4px 15px 4px 0;">Phương thức giao hàng</td>
+                    <td style="text-align: left; padding: 4px 0;">@(string.IsNullOrEmpty(Model.ShippingMethod) ? "" : Model.ShippingMethod)</td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; font-weight: bold; padding: 4px 15px 4px 0;">Địa chỉ giao hàng</td>
+                    <td style="text-align: left; padding: 4px 0;">@Model.ShippingAddress</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Cột phải: DANH SÁCH SẢN PHẨM (Dùng chung Partial View _PVOrderDetails) -->
+    <div class="col-md-7">
+        <h4 style="font-weight: normal; margin-bottom: 20px;">DANH SÁCH SẢN PHẨM</h4>
+        @Html.Partial("~/Views/Shared/_PVOrderDetails.cshtml", Model.OrderDetails)
+    </div>
+</div>
+
+<!-- Hàng nút tác vụ bên dưới -->
+<div style="margin-top: 30px;">
+    <a href="@Url.Action("UpdateStatus", "Orders", new { area = "Admin", id = Model.OrderID })" class="btn btn-primary" style="margin-right: 8px;">Cập nhật trạng thái</a>
+    <a href="@Url.Action("Index", "Orders", new { area = "Admin" })" class="btn btn-primary">Quay lại danh sách</a>
+</div>

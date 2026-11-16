@@ -1,0 +1,39 @@
+﻿@model KTBE.Models.Order
+
+@{
+    ViewBag.Title = "Cập nhật trạng thái đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="bg-success">CẬP NHẬT TRẠNG THÁI ĐƠN HÀNG #@Model.OrderID</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <div style="margin-bottom: 20px;">
+            <p><strong>Khách hàng:</strong> @(Model.Customer != null ? Model.Customer.CustomerName : "N/A")</p>
+            <p><strong>Ngày đặt hàng:</strong> @Model.OrderDate.ToString("M/d/yyyy h:mm:ss tt")</p>
+            <p><strong>Tổng tiền:</strong> @Model.TotalAmount.ToString("N2") đ</p>
+        </div>
+
+        @using (Html.BeginForm("UpdateStatus", "Orders", new { area = "Admin" }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.OrderID)
+
+            <div class="form-group mb-3">
+                <label for="paymentStatus" class="form-label fw-bold mb-1">Trạng thái thanh toán</label>
+                @Html.DropDownList("paymentStatus", (SelectList)ViewBag.PaymentStatusList, new { @class = "form-select", id = "paymentStatus" })
+            </div>
+
+            <div class="form-group mb-4">
+                <label for="orderStatus" class="form-label fw-bold mb-1">Trạng thái đơn hàng</label>
+                @Html.DropDownList("orderStatus", (SelectList)ViewBag.OrderStatusList, new { @class = "form-select", id = "orderStatus" })
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" style="margin-right: 8px;">Lưu thay đổi</button>
+                <a href="@Url.Action("DetailedOrder", "Orders", new { area = "Admin", id = Model.OrderID })" class="btn btn-primary">Quay lại chi tiết</a>
+            </div>
+        }
+    </div>
+</div>

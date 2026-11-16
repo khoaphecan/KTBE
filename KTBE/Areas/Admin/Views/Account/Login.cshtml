@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "Đăng nhập Admin";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - FASTOR</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #f5f5fa;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            padding-top: 60px;
+        }
+        .login-box {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h3 class="text-center fw-bold mb-3">FASTOR ADMIN</h3>
+        <h5 class="text-center text-muted mb-4">Đăng nhập tài khoản Admin</h5>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger py-2">
+                @ViewBag.Error
+            </div>
+        }
+
+        @using (Html.BeginForm("Login", "Account", new { area = "Admin" }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="mb-3">
+                <label for="username" class="form-label">Tên đăng nhập</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Nhập tên đăng nhập" required autofocus />
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Mật khẩu</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Nhập mật khẩu" required />
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-2 mt-2">Đăng nhập</button>
+        }
+    </div>
+</body>
+</html>

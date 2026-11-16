@@ -1,0 +1,65 @@
+﻿@model KTBE.Models.Product
+
+@{
+    ViewBag.Title = "Cập nhật sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="bg-success">CẬP NHẬT SẢN PHẨM</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ProductID)
+
+        <div class="form-group mb-3">
+            <label class="control-label col-md-2 fw-bold mb-1">Tên sản phẩm (*)</label>
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label col-md-2 fw-bold mb-1">Danh mục (*)</label>
+            <div class="col-md-6">
+                @Html.DropDownList("CategoryID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label col-md-2 fw-bold mb-1">Đơn giá (*)</label>
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.ProductPrice, new { htmlAttributes = new { @class = "form-control", type = "number", step = "1000", required = "required" } })
+                @Html.ValidationMessageFor(model => model.ProductPrice, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label col-md-2 fw-bold mb-1">Đường dẫn hình ảnh</label>
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.ProductImage, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ProductImage, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label col-md-2 fw-bold mb-1">Mô tả sản phẩm (*)</label>
+            <div class="col-md-8">
+                @Html.TextAreaFor(model => model.ProductDecription, new { @class = "form-control", rows = 4, required = "required" })
+                @Html.ValidationMessageFor(model => model.ProductDecription, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
+                @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-primary" })
+            </div>
+        </div>
+    </div>
+}

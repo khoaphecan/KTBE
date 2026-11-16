@@ -1,0 +1,59 @@
+﻿@model IEnumerable<KTBE.Models.OrderDetail>
+
+<div class="table-responsive">
+    <table class="table align-middle mb-0" style="border: 1px solid #ddd;">
+        <thead style="background-color: #f5f5f5;">
+            <tr style="border-bottom: 2px solid #ddd;">
+                <th style="font-weight: bold; padding: 12px 10px;">Sản phẩm</th>
+                <th style="font-weight: bold; text-align: center; width: 100px; padding: 12px 10px;">Số lượng</th>
+                <th style="font-weight: bold; text-align: right; width: 130px; padding: 12px 10px;">Đơn giá</th>
+                <th style="font-weight: bold; text-align: right; width: 140px; padding: 12px 10px;">Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    var product = item.Product;
+                    var imgSrc = product != null && !string.IsNullOrEmpty(product.ProductImage)
+                        ? Url.Content(product.ProductImage)
+                        : Url.Content("~/Content/images/tro-choi.png");
+                    var itemTotal = (item.TotalPrice.HasValue ? item.TotalPrice.Value : (item.Quantity * item.UnitPrice));
+
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 12px 10px;">
+                            <div class="d-flex align-items-center">
+                                <img src="@imgSrc" alt="" style="width: 65px; height: 90px; object-fit: cover; border: 1px solid #ddd; margin-right: 12px;" />
+                                <div>
+                                    <div class="fw-bold" style="font-size: 14px;">
+                                        @(product != null ? product.ProductName : "Sản phẩm #" + item.ProductID)
+                                    </div>
+                                    @if (product != null && product.Category != null)
+                                    {
+                                        <div class="text-muted small">Danh mục: @product.Category.CategoryName</div>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                        <td style="text-align: center; padding: 12px 10px; font-weight: 500;">
+                            @item.Quantity
+                        </td>
+                        <td style="text-align: right; padding: 12px 10px;">
+                            @item.UnitPrice.ToString("N0") đ
+                        </td>
+                        <td style="text-align: right; padding: 12px 10px; font-weight: bold; color: #d9534f;">
+                            @itemTotal.ToString("N0") đ
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-center text-muted py-4">Không có sản phẩm nào trong chi tiết đơn hàng.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

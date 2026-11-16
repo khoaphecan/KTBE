@@ -1,0 +1,33 @@
+﻿@model KTBE.Models.Category
+
+@{
+    ViewBag.Title = "Cập nhật danh mục";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="bg-success">CẬP NHẬT DANH MỤC</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.CategoryID)
+
+        <div class="form-group mb-3">
+            <label class="control-label col-md-2 fw-bold mb-1">Tên danh mục</label>
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.CategoryName, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                @Html.ValidationMessageFor(model => model.CategoryName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
+                @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-primary" })
+            </div>
+        </div>
+    </div>
+}

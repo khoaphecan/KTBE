@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - FASTOR Admin</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #fff;
+            color: #333;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .admin-navbar {
+            background-color: #1e1e1e;
+            padding: 0 15px;
+            border-radius: 0;
+        }
+        .admin-logo {
+            background-color: #fff;
+            color: #000;
+            font-weight: bold;
+            font-size: 20px;
+            letter-spacing: 2px;
+            padding: 4px 14px;
+            display: inline-block;
+            margin-right: 25px;
+            text-decoration: none;
+            border-radius: 0;
+        }
+        .admin-navbar .nav-link {
+            color: #ccc;
+            font-weight: 500;
+            padding: 16px 14px;
+            font-size: 15px;
+            border-radius: 0;
+        }
+        .admin-navbar .nav-link:hover,
+        .admin-navbar .nav-link.active {
+            color: #fff;
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+            margin-top: 0;
+        }
+        .dropdown-menu {
+            border-radius: 0;
+            box-shadow: none;
+            border: 1px solid #ccc;
+        }
+        .main-content {
+            flex: 1;
+            padding: 25px 15px;
+        }
+        .admin-footer {
+            background-color: #d6d6d6;
+            color: #333;
+            padding: 20px 40px;
+            margin-top: auto;
+        }
+        /* Bootstrap co dien vuong vuc theo slide */
+        .btn {
+            border-radius: 4px;
+        }
+        .btn-primary {
+            background-color: #337ab7 !important;
+            border-color: #2e6da4 !important;
+            color: #fff !important;
+        }
+        .btn-primary:hover {
+            background-color: #286090 !important;
+            border-color: #204d74 !important;
+        }
+        .bg-success {
+            background-color: #dff0d8 !important;
+            color: #3c763d !important;
+        }
+        .bg-info {
+            background-color: #d9edf7 !important;
+            color: #31708f !important;
+        }
+        h2.bg-success, h1.bg-success {
+            padding: 10px 15px;
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg admin-navbar">
+        <div class="container-fluid">
+            <a href="@Url.Action("Index", "HomeAdmin", new { area = "Admin" })" class="admin-logo">FASTOR</a>
+            <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="adminNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "HomeAdmin", new { area = "Admin" })">HomeAdmin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Categories", new { area = "Admin" })">Danh mục</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Products", new { area = "Admin" })">Sản phẩm</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Customers", new { area = "Admin" })">Khách hàng</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Orders", new { area = "Admin" })">Đơn hàng</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" data-toggle="dropdown" aria-expanded="false">
+                            Tài khoản
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                            <li><span class="dropdown-item-text text-muted">Admin: @(Session["AdminUser"] ?? "admin")</span></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger fw-bold" href="@Url.Action("Logout", "Account", new { area = "Admin" })">Đăng xuất</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid main-content px-4">
+        @RenderBody()
+    </div>
+
+    <footer class="admin-footer">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <div>
+                &copy; 2025 - Tên ứng dụng
+            </div>
+            <div class="text-end">
+                <div class="fw-bold">Contact</div>
+                <div class="text-muted small">Tên các thành viên trong nhóm</div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/Scripts/jquery-3.7.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.dropdown-toggle').dropdown();
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,56 @@
+﻿@model KTBE.Models.Customer
+
+@{
+    ViewBag.Title = "Hồ sơ khách hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center py-4">
+    <div class="col-md-8 col-lg-7">
+        <div class="card p-4 bg-white" style="border: 1px solid #ddd;">
+            <h4 class="fw-bold border-bottom pb-3 mb-3">HỒ SƠ KHÁCH HÀNG</h4>
+
+            @if (ViewBag.Message != null)
+            {
+                <div class="alert alert-success py-2">
+                    @ViewBag.Message
+                </div>
+            }
+
+            @using (Html.BeginForm("ProfileInfo", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Tên tài khoản (Username)</label>
+                    <input type="text" class="form-control bg-light" value="@Model.Username" readonly />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Họ và tên (*)</label>
+                    <input type="text" name="CustomerName" class="form-control" value="@Model.CustomerName" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Số điện thoại (*)</label>
+                    <input type="tel" name="CustomerPhone" class="form-control" value="@Model.CustomerPhone" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Email</label>
+                    <input type="email" name="CustomerEmail" class="form-control" value="@Model.CustomerEmail" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Địa chỉ giao hàng</label>
+                    <textarea name="CustomerAddress" rows="3" class="form-control">@Model.CustomerAddress</textarea>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary px-4">Lưu thay đổi</button>
+                    <a href="@Url.Action("MyOrder", "Order")" class="btn btn-outline-secondary px-4">Lịch sử mua hàng</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

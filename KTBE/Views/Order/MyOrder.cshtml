@@ -1,0 +1,314 @@
+﻿@model KTBE.Models.ViewModel.MyOrderVM
+
+@{
+    ViewBag.Title = "Đơn hàng của tôi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var tabs = new[]
+    {
+        "Tất cả đơn",
+        "Chờ thanh toán",
+        "Đang xử lý",
+        "Đang vận chuyển",
+        "Đã giao",
+        "Đã hủy"
+    };
+}
+
+@section styles {
+    <style>
+        .myorder-page {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+        .myorder-header-title {
+            font-size: 19px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .order-tabs-container {
+            background-color: #fff;
+            border-bottom: 2px solid #e5e5e5;
+            margin-bottom: 12px;
+        }
+        .order-tab-list {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-x: auto;
+        }
+        .order-tab-item {
+            flex: 1;
+            text-align: center;
+        }
+        .order-tab-item a {
+            display: block;
+            padding: 14px 10px;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+        .order-tab-item a:hover {
+            color: #0d6efd;
+        }
+        .order-tab-item a.active {
+            color: #0d6efd;
+            border-bottom: 2px solid #0d6efd;
+            font-weight: 600;
+        }
+        .search-order-wrapper {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 2px;
+            padding: 6px 14px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .search-order-input {
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 6px 8px;
+            font-size: 14px;
+        }
+        .search-order-divider {
+            color: #ccc;
+            margin: 0 10px;
+        }
+        .search-order-button {
+            background: none;
+            border: none;
+            color: #0d6efd;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .order-card-box {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 15px;
+            padding: 15px 20px;
+        }
+        .order-card-status {
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 10px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .order-card-items {
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 10px;
+            margin-bottom: 12px;
+        }
+        .order-item-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .order-item-row:last-child {
+            margin-bottom: 0;
+        }
+        .order-item-img {
+            width: 60px;
+            height: 80px;
+            border: 1px solid #eee;
+            margin-right: 12px;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .order-item-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .order-item-qty {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            background-color: #ebebf0;
+            color: #787878;
+            font-size: 11px;
+            padding: 1px 4px;
+            border-radius: 2px;
+        }
+        .order-card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .order-total-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        .order-action-btns .btn {
+            padding: 5px 12px;
+            font-size: 13px;
+            margin-left: 6px;
+        }
+    </style>
+}
+
+<div class="myorder-page py-3">
+    <div class="myorder-header-title">
+        Đơn hàng của tôi
+    </div>
+
+    <!-- 1. KIỂM TRA TRƯỜNG HỢP KHÁCH HÀNG CHƯA TỪNG CÓ ĐƠN HÀNG NÀO -->
+    @if (Model.TotalUserOrders == 0)
+    {
+        <div class="bg-white p-5 text-center my-3" style="border: 1px solid #e0e0e0;">
+            <h4 class="text-danger fw-bold mb-3">
+                BẠN CHƯA CÓ ĐƠN HÀNG NÀO. HÃY ĐẶT ĐƠN NGAY.
+            </h4>
+            <div class="mt-4">
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary px-4 py-2">
+                    Về trang HOME
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- 2. THANH 6 TABS TRẠNG THÁI -->
+        <div class="order-tabs-container">
+            <ul class="order-tab-list">
+                @foreach (var tab in tabs)
+                {
+                    bool isActive = Model.ActiveStatus.Equals(tab, StringComparison.OrdinalIgnoreCase);
+                    <li class="order-tab-item">
+                        <a href="@Url.Action("MyOrder", "Order", new { status = tab, searchTerm = Model.SearchTerm })" 
+                           class="@(isActive ? "active" : "")">
+                            @tab
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <!-- 3. THANH TÌM KIẾM ĐƠN HÀNG -->
+        using (Html.BeginForm("MyOrder", "Order", FormMethod.Get, new { @class = "mb-3" }))
+        {
+            <input type="hidden" name="status" value="@Model.ActiveStatus" />
+            <div class="search-order-wrapper">
+                <input type="text" name="searchTerm" value="@Model.SearchTerm" class="search-order-input" 
+                       placeholder="Tìm đơn hàng theo Mã đơn hàng hoặc Tên sản phẩm" />
+                <span class="search-order-divider">|</span>
+                <button type="submit" class="search-order-button">Tìm đơn hàng</button>
+            </div>
+        }
+
+        <!-- 4. DANH SÁCH ĐƠN HÀNG -->
+        if (Model.OrderGroups == null || !Model.OrderGroups.Any(g => g.Orders.Any()))
+        {
+            <div class="bg-white p-5 text-center" style="border: 1px solid #e0e0e0;">
+                <p class="text-muted mb-0">Không có đơn hàng nào phù hợp.</p>
+            </div>
+        }
+        else
+        {
+            foreach (var group in Model.OrderGroups.Where(g => g.Orders.Any()))
+            {
+                <div class="status-group-wrap mb-3">
+                    @foreach (var order in group.Orders)
+                    {
+                        var firstDetail = order.OrderDetails.FirstOrDefault();
+
+                        <div class="order-card-box">
+                            <!-- Header đơn hàng -->
+                            <div class="order-card-status">
+                                <span class="fw-semibold text-secondary">
+                                    @if (order.OrderStatus == "Đã giao")
+                                    {
+                                        <span>Giao hàng thành công</span>
+                                    }
+                                    else if (order.OrderStatus == "Đã hủy")
+                                    {
+                                        <span>Đã hủy</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@order.OrderStatus</span>
+                                    }
+                                </span>
+                                <span class="text-muted small">
+                                    Mã đơn: #@order.OrderID | Ngày: @order.OrderDate.ToString("dd/MM/yyyy HH:mm")
+                                </span>
+                            </div>
+
+                            <!-- Danh sách sản phẩm -->
+                            <div class="order-card-items">
+                                @foreach (var detail in order.OrderDetails)
+                                {
+                                    var product = detail.Product;
+                                    var imgSrc = product != null && !string.IsNullOrEmpty(product.ProductImage)
+                                        ? Url.Content(product.ProductImage)
+                                        : Url.Content("~/Content/images/tro-choi.png");
+
+                                    <div class="order-item-row">
+                                        <div class="order-item-img">
+                                            <img src="@imgSrc" alt="@(product != null ? product.ProductName : "")" />
+                                            <span class="order-item-qty">x@detail.Quantity</span>
+                                        </div>
+                                        <div class="flex-grow-1 pe-3">
+                                            <div class="fw-bold mb-1" style="font-size: 14px;">
+                                                @(product != null ? product.ProductName : "Sản phẩm #" + detail.ProductID)
+                                            </div>
+                                            <div class="text-muted small">
+                                                Fastor Trading
+                                            </div>
+                                        </div>
+                                        <div class="text-end fw-semibold" style="font-size: 14px;">
+                                            @detail.UnitPrice.ToString("N0") đ
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Footer đơn hàng: Tổng tiền + nút Mua lại, Xem chi tiết, Chi tiết hóa đơn -->
+                            <div class="order-card-bottom">
+                                <div class="order-total-price">
+                                    <span class="text-muted fw-normal" style="font-size: 14px;">Tổng tiền:</span> @order.TotalAmount.ToString("N0") đ
+                                </div>
+                                <div class="order-action-btns">
+                                    <a href="@Url.Action("OrderDetail", "Order", new { id = order.OrderID })" class="btn btn-outline-info btn-sm">
+                                        Chi tiết hóa đơn
+                                    </a>
+                                    <a href="@Url.Action("BuyAgain", "Order", new { id = order.OrderID })" class="btn btn-outline-danger btn-sm">
+                                        Mua lại
+                                    </a>
+                                    @if (firstDetail != null && firstDetail.ProductID > 0)
+                                    {
+                                        <a href="@Url.Action("ProductDetail", "Home", new { id = firstDetail.ProductID })" class="btn btn-outline-primary btn-sm">
+                                            Xem sản phẩm
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Nút Xem thêm tối đa 50 đơn -->
+                    @if (group.TotalCount > 2 && !group.IsExpanded)
+                    {
+                        <div class="text-center my-2">
+                            <a href="@Url.Action("MyOrder", "Order", new { status = Model.ActiveStatus, searchTerm = Model.SearchTerm, expandStatus = group.StatusName })" 
+                               class="btn btn-default btn-sm border bg-white px-4">
+                                Xem thêm
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+        }
+    }
+</div>

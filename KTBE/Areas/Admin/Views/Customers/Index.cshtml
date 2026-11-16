@@ -1,0 +1,35 @@
+﻿@model IEnumerable<KTBE.Models.Customer>
+
+@{
+    ViewBag.Title = "Danh sách khách hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="bg-success">DANH SÁCH KHÁCH HÀNG</h2>
+
+<table class="table bg-info table-bordered align-middle">
+    <tr>
+        <th class="bg-success text-center" style="width: 80px;">MÃ KH</th>
+        <th class="bg-success">TÊN ĐĂNG NHẬP</th>
+        <th class="bg-success">HỌ VÀ TÊN</th>
+        <th class="bg-success">SỐ ĐIỆN THOẠI</th>
+        <th class="bg-success">EMAIL</th>
+        <th class="bg-success">ĐỊA CHỈ</th>
+        <th class="bg-success text-center" style="width: 100px;">THAO TÁC</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td class="text-center">@item.CustomerID</td>
+        <td>@item.Username</td>
+        <td><strong>@item.CustomerName</strong></td>
+        <td>@item.CustomerPhone</td>
+        <td>@(string.IsNullOrEmpty(item.CustomerEmail) ? "N/A" : item.CustomerEmail)</td>
+        <td>@(string.IsNullOrEmpty(item.CustomerAddress) ? "N/A" : item.CustomerAddress)</td>
+        <td class="text-center">
+            @Html.ActionLink("Chi tiết", "Details", new { id = item.CustomerID }, new { @class = "btn btn-primary btn-sm" })
+        </td>
+    </tr>
+}
+
+</table>

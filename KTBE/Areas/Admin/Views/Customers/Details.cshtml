@@ -1,0 +1,34 @@
+﻿@model KTBE.Models.Customer
+
+@{
+    ViewBag.Title = "Thông tin khách hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="bg-success">THÔNG TIN KHÁCH HÀNG</h2>
+
+<div>
+    <dl class="dl-horizontal mb-4" style="line-height: 2;">
+        <dt class="fw-bold">Mã khách hàng:</dt>
+        <dd>@Model.CustomerID</dd>
+
+        <dt class="fw-bold">Tên tài khoản:</dt>
+        <dd>@Model.Username</dd>
+
+        <dt class="fw-bold">Họ và tên:</dt>
+        <dd>@Model.CustomerName</dd>
+
+        <dt class="fw-bold">Số điện thoại:</dt>
+        <dd>@Model.CustomerPhone</dd>
+
+        <dt class="fw-bold">Email:</dt>
+        <dd>@(string.IsNullOrEmpty(Model.CustomerEmail) ? "N/A" : Model.CustomerEmail)</dd>
+
+        <dt class="fw-bold">Địa chỉ:</dt>
+        <dd>@(string.IsNullOrEmpty(Model.CustomerAddress) ? "N/A" : Model.CustomerAddress)</dd>
+    </dl>
+
+    <p>
+        @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-primary" })
+    </p>
+</div>

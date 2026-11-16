@@ -1,0 +1,25 @@
+﻿@model KTBE.Models.Category
+
+@{
+    ViewBag.Title = "Xóa danh mục";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="bg-success">XÓA DANH MỤC</h2>
+
+<h3>Bạn có chắc chắn muốn xóa danh mục này?</h3>
+<div>
+    <dl class="dl-horizontal mb-3">
+        <dt class="fw-bold">Tên danh mục:</dt>
+        <dd>@Html.DisplayFor(model => model.CategoryName)</dd>
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Xác nhận xóa" class="btn btn-danger" />
+            @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-primary" })
+        </div>
+    }
+</div>

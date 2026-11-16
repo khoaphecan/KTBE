@@ -1,0 +1,48 @@
+﻿@model IEnumerable<KTBE.Models.Product>
+
+@{
+    ViewBag.Title = "Danh sách sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="bg-success">DANH SÁCH SẢN PHẨM</h2>
+
+<p>
+    @Html.ActionLink("Thêm mới", "Create", null, new { @class = "btn btn-primary" })
+</p>
+
+<table class="table bg-info table-bordered align-middle">
+    <tr>
+        <th class="bg-success text-center" style="width: 80px;">HÌNH ẢNH</th>
+        <th class="bg-success">TÊN SẢN PHẨM</th>
+        <th class="bg-success" style="width: 220px;">DANH MỤC</th>
+        <th class="bg-success text-end" style="width: 130px;">ĐƠN GIÁ</th>
+        <th class="bg-success text-center" style="width: 140px;">THAO TÁC</th>
+    </tr>
+
+@foreach (var item in Model) {
+    var imgSrc = !string.IsNullOrEmpty(item.ProductImage) 
+        ? Url.Content(item.ProductImage) 
+        : Url.Content("~/Content/images/tro-choi.png");
+
+    <tr>
+        <td class="text-center">
+            <img src="@imgSrc" alt="@item.ProductName" style="width: 50px; height: 65px; object-fit: cover; border: 1px solid #ccc;" />
+        </td>
+        <td>
+            <strong>@Html.DisplayFor(modelItem => item.ProductName)</strong>
+        </td>
+        <td>
+            @(item.Category != null ? item.Category.CategoryName : "N/A")
+        </td>
+        <td class="text-end fw-bold">
+            @item.ProductPrice.ToString("N0") đ
+        </td>
+        <td class="text-center">
+            @Html.ActionLink("Sửa", "Edit", new { id = item.ProductID }, new { @class = "btn btn-primary btn-sm" })
+            @Html.ActionLink("Xóa", "Delete", new { id = item.ProductID }, new { @class = "btn btn-primary btn-sm" })
+        </td>
+    </tr>
+}
+
+</table>

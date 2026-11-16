@@ -1,0 +1,53 @@
+﻿@model KTBE.Models.ViewModel.LoginVM
+
+@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center py-4">
+    <div class="col-md-5">
+        <div class="card p-4 bg-white" style="border: 1px solid #ddd;">
+            <h4 class="fw-bold text-center mb-3">ĐĂNG NHẬP KHÁCH HÀNG</h4>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success py-2">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger py-2">
+                    @ViewBag.Error
+                </div>
+            }
+
+            @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.ReturnUrl)
+
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Username, new { @class = "form-label" })
+                    @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Nhập tên đăng nhập", autofocus = "autofocus" })
+                    @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger small" })
+                </div>
+
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Password, new { @class = "form-label" })
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Nhập mật khẩu" })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2 mb-3">Đăng nhập</button>
+
+                <div class="text-center border-top pt-3">
+                    <span class="text-muted">Chưa có tài khoản?</span>
+                    <a href="@Url.Action("Register", "Account")" class="text-decoration-none fw-semibold ms-1">Đăng ký ngay</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

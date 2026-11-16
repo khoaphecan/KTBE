@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Trang quản trị";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 style="font-size: 36px; margin: 20px 0 25px 0;">TRANG QUẢN TRỊ</h1>
+
+<table class="table table-bordered bg-info" style="max-width: 650px;">
+    <thead class="bg-success">
+        <tr>
+            <th style="padding: 10px 15px;">MỤC QUẢN LÝ</th>
+            <th class="text-center" style="width: 120px; padding: 10px 15px;">SỐ LƯỢNG</th>
+            <th class="text-center" style="width: 140px; padding: 10px 15px;">THAO TÁC</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="padding: 10px 15px;">Danh mục sản phẩm</td>
+            <td class="text-center fw-bold" style="padding: 10px 15px;">@ViewBag.TotalCategories</td>
+            <td class="text-center" style="padding: 10px 15px;">
+                <a href="@Url.Action("Index", "Categories", new { area = "Admin" })" class="btn btn-primary btn-sm">Quản lý</a>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px 15px;">Sản phẩm</td>
+            <td class="text-center fw-bold" style="padding: 10px 15px;">@ViewBag.TotalProducts</td>
+            <td class="text-center" style="padding: 10px 15px;">
+                <a href="@Url.Action("Index", "Products", new { area = "Admin" })" class="btn btn-primary btn-sm">Quản lý</a>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px 15px;">Khách hàng</td>
+            <td class="text-center fw-bold" style="padding: 10px 15px;">@ViewBag.TotalCustomers</td>
+            <td class="text-center" style="padding: 10px 15px;">
+                <a href="@Url.Action("Index", "Customers", new { area = "Admin" })" class="btn btn-primary btn-sm">Quản lý</a>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px 15px;">Đơn hàng</td>
+            <td class="text-center fw-bold" style="padding: 10px 15px;">@ViewBag.TotalOrders</td>
+            <td class="text-center" style="padding: 10px 15px;">
+                <a href="@Url.Action("Index", "Orders", new { area = "Admin" })" class="btn btn-primary btn-sm">Quản lý</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

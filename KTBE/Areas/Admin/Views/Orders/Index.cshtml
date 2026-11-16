@@ -1,0 +1,90 @@
+﻿@model KTBE.Models.ViewModel.OrderSearchVM
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Danh sách đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div style="margin-bottom: 25px;">
+    @using (Html.BeginForm("Index", "Orders", new { area = "Admin" }, FormMethod.Get, new { @class = "row align-items-end g-3" }))
+    {
+        <div class="col-auto">
+            <label for="customerName" class="form-label d-block fw-normal mb-1">Tên khách hàng</label>
+            <input type="text" id="customerName" name="customerName" class="form-control" value="@Model.CustomerName" style="width: 220px;" />
+        </div>
+        <div class="col-auto">
+            <label for="paymentStatus" class="form-label d-block fw-normal mb-1">Trạng thái thanh toán</label>
+            @Html.DropDownList("paymentStatus", (SelectList)ViewBag.PaymentStatusList, new { @class = "form-select", id = "paymentStatus", style = "width: 220px;" })
+        </div>
+        <div class="col-auto">
+            <label for="orderDate" class="form-label d-block fw-normal mb-1">Ngày đặt hàng</label>
+            <input type="date" id="orderDate" name="orderDate" class="form-control" value="@(Model.OrderDate.HasValue ? Model.OrderDate.Value.ToString("yyyy-MM-dd") : "")" style="width: 220px;" />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary px-4">Tìm kiếm</button>
+        </div>
+    }
+</div>
+
+<div style="background-color: #dff0d8; padding: 10px 15px; font-size: 24px; color: #333; margin-bottom: 0;">
+    DANH SÁCH ĐƠN HÀNG
+</div>
+
+@if (Model.Orders == null || Model.Orders.Count == 0)
+{
+    <div style="padding: 25px 0;">
+        <h3 class="text-danger fw-bold mb-0">KHÔNG CÓ</h3>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table" style="background-color: #d9edf7; margin-bottom: 20px;">
+            <thead>
+                <tr style="background-color: #dff0d8;">
+                    <th style="padding: 12px 10px; border-bottom: 2px solid #bce8f1; font-weight: bold;">Ngày đặt hàng</th>
+                    <th style="padding: 12px 10px; border-bottom: 2px solid #bce8f1; font-weight: bold;">Tên khách hàng</th>
+                    <th style="padding: 12px 10px; border-bottom: 2px solid #bce8f1; font-weight: bold;">Tổng giá trị</th>
+                    <th style="padding: 12px 10px; border-bottom: 2px solid #bce8f1; font-weight: bold;">Trạng thái thanh toán</th>
+                    <th style="padding: 12px 10px; border-bottom: 2px solid #bce8f1; font-weight: bold;">Phương thức giao hàng</th>
+                    <th style="padding: 12px 10px; border-bottom: 2px solid #bce8f1;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Orders)
+                {
+                    <tr style="border-top: 1px solid #bce8f1;">
+                        <td style="padding: 12px 10px;">@item.OrderDate.ToString("M/d/yyyy h:mm:ss tt")</td>
+                        <td style="padding: 12px 10px;">@(item.Customer != null ? item.Customer.CustomerName : "N/A")</td>
+                        <td style="padding: 12px 10px;">@item.TotalAmount.ToString("N2")</td>
+                        <td style="padding: 12px 10px;">@item.PaymentStatus</td>
+                        <td style="padding: 12px 10px;">@(string.IsNullOrEmpty(item.ShippingMethod) ? "" : item.ShippingMethod)</td>
+                        <td style="padding: 12px 10px;">
+                            @Html.ActionLink("Chi tiết đơn hàng", "DetailedOrder", new { id = item.OrderID }, new { style = "color: #337ab7; text-decoration: none;" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination-container">
+        @Html.PagedListPager(Model.Orders, page => Url.Action("Index", new {
+            page = page,
+            customerName = Model.CustomerName,
+            paymentStatus = Model.PaymentStatus,
+            orderDate = Model.OrderDate.HasValue ? Model.OrderDate.Value.ToString("yyyy-MM-dd") : null
+        }), new PagedListRenderOptions
+        {
+            UlElementClasses = new[] { "pagination", "pagination-sm", "mb-0" },
+            LiElementClasses = new[] { "page-item" },
+            DisplayLinkToFirstPage = PagedListDisplayMode.Never,
+            DisplayLinkToLastPage = PagedListDisplayMode.Never,
+            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+            DisplayLinkToNextPage = PagedListDisplayMode.Always,
+            LinkToPreviousPageFormat = "«",
+            LinkToNextPageFormat = "»"
+        })
+    </div>
+}
